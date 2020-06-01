@@ -17,6 +17,7 @@
             <SearchTop
               :input-event="onInputEnterEvent"
               :button-event="onButtonClickEvent"
+              :reset-search="onResetSearch"
             />
             <BoardList
               :boardList="GET_BOARD_LIST.list"
@@ -76,6 +77,9 @@
       },
       changeRouteLink(viewid) {
         this.$router.push(`/board/bbs/view/${viewid}`)
+      },
+      onResetSearch () {
+        this.keyword = ''
       },
     },
   }

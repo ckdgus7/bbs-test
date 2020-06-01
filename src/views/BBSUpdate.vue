@@ -138,13 +138,8 @@ export default {
       const { wr_id, wr_name, wr_subject, wr_content } = this
       this.UPDATE_BOARD({ bid, wr_id, wr_name, wr_subject, wr_content }).then(
         () => {
-          this.DETAIL_BOARD({
-            bid: this.getBoardNum(this.$route),
-            pageType: 'view',
-          }).then(() => {
-            this.$router.push({
-              path: `/board/bbs/view/${wr_id}`,
-            })
+          this.$router.push({
+            path: `/board/bbs/view/${wr_id}`,
           })
         },
       )

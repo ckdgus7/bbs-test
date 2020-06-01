@@ -9,7 +9,9 @@
       style="height: 30px; width: 200px;margin-bottom: 10px;"
     />
     |
-    <button type="button" @click.prevent="onClickButton">검색</button>
+    <button type="button" @click.prevent="onClickSearchButton">검색</button>
+    |
+    <button type="button" @click.prevent="onClickResetButton">초기화</button>
   </div>
 </template>
 <script>
@@ -23,10 +25,18 @@ export default {
       type: Function,
       default: () => {},
     },
+    resetSearch: {
+      type: Function,
+      default: () => {},
+    },
   },
   methods: {
-    onClickButton() {
+    onClickSearchButton() {
       this.buttonEvent(this.$refs.searchtext.value)
+    },
+    onClickResetButton() {
+      this.$refs.searchtext.value = ''
+      this.resetSearch()
     },
   },
 }

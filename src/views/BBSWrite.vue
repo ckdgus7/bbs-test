@@ -110,9 +110,9 @@ export default {
 
       this.INSERT_BOARD({
         bid: 'bbs',
-        wr_name: wr_name,
-        wr_subject: wr_subject,
-        wr_content: wr_content,
+        wr_name,
+        wr_subject,
+        wr_content,
       }).then(() => {
         this.$router.push(`/board/bbs`)
       })

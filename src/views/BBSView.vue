@@ -74,7 +74,6 @@ export default {
     ...mapGetters(['GET_BOARD']),
   },
   created() {
-    console.log(this.$route['name']);
     this.setBoardData(this.$route)
   },
   methods: {
