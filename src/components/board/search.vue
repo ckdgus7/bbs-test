@@ -13,21 +13,21 @@
   </div>
 </template>
 <script>
-  export default {
-    props: {
-      inputEvent: {
-        type: Function,
-        default: () => {},
-      },
-      buttonEvent: {
-        type: Function,
-        default: () => {},
-      },
+export default {
+  props: {
+    inputEvent: {
+      type: Function,
+      default: () => {},
     },
-    methods: {
-      onClickButton() {
-        this.buttonEvent(this.$refs.searchtext.value)
-      },
+    buttonEvent: {
+      type: Function,
+      default: () => {},
     },
-  }
+  },
+  methods: {
+    onClickButton() {
+      this.buttonEvent(this.$refs.searchtext.value)
+    },
+  },
+}
 </script>

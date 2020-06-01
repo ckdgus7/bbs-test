@@ -28,7 +28,7 @@
                 name="wr_name"
                 ref="wr_name"
                 id="wr_name"
-                v-model="GET_BOARD.wr_user"
+                v-model="wr_name"
                 required
                 class="frm_input half_input required"
                 placeholder="이름"
@@ -45,7 +45,7 @@
                   type="text"
                   name="wr_subject"
                   ref="wr_subject"
-                  v-model="GET_BOARD.wr_title"
+                  v-model="wr_subject"
                   id="wr_subject"
                   required
                   class="frm_input full_input required"
@@ -64,7 +64,7 @@
                   id="wr_content"
                   name="wr_content"
                   ref="wr_content"
-                  v-model="GET_BOARD.wr_content"
+                  v-model="wr_content"
                   class=""
                   maxlength="65536"
                   style="width:100%;height:300px"
@@ -95,54 +95,66 @@
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
-  export default {
-    data() {
+import { mapGetters, mapActions } from 'vuex'
+export default {
+  data() {
+    return {
+      wr_id: '',
+      wr_name: '',
+      wr_subject: '',
+      wr_content: '',
+    }
+  },
+  computed: {
+    ...mapGetters(['GET_BOARD']),
+  },
+  created() {
+    this.setBoardData(this.$route)
+  },
+  mounted() {
+    this.$refs.wr_name.focus()
+  },
+  methods: {
+    ...mapActions(['DETAIL_BOARD', 'UPDATE_BOARD']),
+    getBoardNum(to) {
       return {
-        name: '',
+        bid: 1,
+        wr_id: to.params.viewid,
       }
     },
-    created() {
-      this.setBoardData(this.$route)
+    setBoardData(to) {
+      this.DETAIL_BOARD({
+        bid: this.getBoardNum(to),
+        pageType: 'update',
+      }).then(({ data }) => {
+        this.wr_id = data.wr_id
+        this.wr_name = data.wr_user
+        this.wr_subject = data.wr_title
+        this.wr_content = data.wr_content
+      })
     },
-    computed: {
-      ...mapGetters(['GET_BOARD']),
+    updateBoardData() {
+      const bid = 'bbs'
+      const { wr_id, wr_name, wr_subject, wr_content } = this
+      this.UPDATE_BOARD({ bid, wr_id, wr_name, wr_subject, wr_content }).then(
+        () => {
+          this.DETAIL_BOARD({
+            bid: this.getBoardNum(this.$route),
+            pageType: 'view',
+          }).then(() => {
+            this.$router.push({
+              path: `/board/bbs/view/${wr_id}`,
+            })
+          })
+        },
+      )
     },
-    mounted() {
-      this.$refs.wr_name.focus()
+    updateCancel() {
+      const viewid = this.$route.params.viewid
+      this.$router.push(`/board/bbs/view/${viewid}`)
     },
-    methods: {
-      ...mapActions(['DETAIL_BOARD', 'UPDATE_BOARD']),
-      getBoardNum(to) {
-        return {
-          bid: 1,
-          wr_id: to.params.viewid,
-        }
-      },
-      setBoardData(to) {
-        this.DETAIL_BOARD({
-          bid: this.getBoardNum(to),
-          pageType: 'update',
-        }).then(() => {})
-      },
-      updateBoardData() {
-        const bid = 'bbs'
-        const wr_id = this.GET_BOARD.wr_id
-        const wr_name = this.$refs.wr_name.value
-        const wr_subject = this.$refs.wr_subject.value
-        const wr_content = this.$refs.wr_content.value
-        this.UPDATE_BOARD({ bid, wr_id, wr_name, wr_subject, wr_content }).then(
-          () => {
-            this.$router.push(`/board/bbs`)
-          },
-        )
-      },
-      updateCancel() {
-        const viewid = this.$route.params.viewid
-        this.$router.push(`/board/bbs/view/${viewid}`)
-      },
-    },
-  }
+  },
+}
 </script>
 
 <style></style>

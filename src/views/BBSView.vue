@@ -6,35 +6,53 @@
       </h2>
     </header>
     <section id="bo_v_info">
-        <h2>페이지 정보</h2>
-        <div class="profile_info">
-          <!-- <div class="pf_img"><img src="http://jswrap.ivyro.net/img/no_profile.gif" alt="profile_image"></div> -->
-          <div class="profile_info_ct">
-            <span class="sound_only">작성자</span> 
-            <strong><span class="sv_guest">{{ GET_BOARD.wr_user }}</span></strong><br>
-            <!-- <span>댓글</span>
+      <h2>페이지 정보</h2>
+      <div class="profile_info">
+        <!-- <div class="pf_img"><img src="http://jswrap.ivyro.net/img/no_profile.gif" alt="profile_image"></div> -->
+        <div class="profile_info_ct">
+          <span class="sound_only">작성자</span>
+          <strong
+            ><span class="sv_guest">{{ GET_BOARD.wr_user }}</span></strong
+          ><br />
+          <!-- <span>댓글</span>
             <strong><a href="#bo_vc"> <i class="fa fa-commenting-o" aria-hidden="true"></i> {{ GET_BOARD.wr_comment }}건</a></strong> -->
-            <span >조회 : </span>
-            <strong><i class="fa fa-eye" aria-hidden="true"></i> {{ GET_BOARD.wr_count }}회</strong> / 
-            <strong class="if_date">
-              <span>작성일 : </span><i class="fa fa-clock-o" aria-hidden="true"></i> {{ GET_BOARD.wr_date }}
-            </strong>
+          <span>조회 : </span>
+          <strong
+            ><i class="fa fa-eye" aria-hidden="true"></i>
+            {{ GET_BOARD.wr_count }}회</strong
+          >
+          /
+          <strong class="if_date">
+            <span>작성일 : </span
+            ><i class="fa fa-clock-o" aria-hidden="true"></i>
+            {{ GET_BOARD.wr_date }}
+          </strong>
         </div>
       </div>
       <!-- 게시물 상단 버튼 시작 { -->
       <div id="bo_v_top">
         <ul class="btn_bo_user bo_v_com">
           <li>
-            <router-link :class="`event-btn`" :to="`/board/bbs`">목록</router-link>
+            <router-link :class="`event-btn`" :to="`/board/bbs`"
+              >목록</router-link
+            >
           </li>
           <li>
-            <router-link :class="`event-btn`" :to="`/board/bbs/write`">글쓰기</router-link>
+            <router-link :class="`event-btn`" :to="`/board/bbs/write`"
+              >글쓰기</router-link
+            >
           </li>
           <li>
-            <router-link :class="`event-btn`" :to="`/board/bbs/update/${GET_BOARD.wr_id}`">수정</router-link>
+            <router-link
+              :class="`event-btn`"
+              :to="`/board/bbs/update/${GET_BOARD.wr_id}`"
+              >수정</router-link
+            >
           </li>
           <li>
-            <a class="event-btn" href="" @click.prevent="deleteBoardData()">삭제</a>
+            <a class="event-btn" href="" @click.prevent="deleteBoardData()"
+              >삭제</a
+            >
           </li>
         </ul>
       </div>
@@ -50,44 +68,37 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex'
 export default {
-  created () {
-    this.setBoardData(this.$route);
-  },
   computed: {
-    ...mapGetters([
-      'GET_BOARD'
-    ])
+    ...mapGetters(['GET_BOARD']),
+  },
+  created() {
+    console.log(this.$route['name']);
+    this.setBoardData(this.$route)
   },
   methods: {
-    ...mapActions([
-      'DETAIL_BOARD',
-      'DELETE_BOARD'
-    ]),
-    getBoardNum (to) {
+    ...mapActions(['DETAIL_BOARD', 'DELETE_BOARD', 'FETCH_BOARD']),
+    getBoardNum(to) {
       return {
         bid: 1,
-        wr_id: to.params.viewid
-      };
+        wr_id: to.params.viewid,
+      }
     },
-    setBoardData (to) {
-      this.DETAIL_BOARD({
-				bid: this.getBoardNum(to),
-				pageType: 'view'
-			})
-      .then(() => {
-      });
+    async setBoardData(to) {
+      await this.DETAIL_BOARD({
+        bid: this.getBoardNum(to),
+        pageType: 'view',
+      })
     },
-    deleteBoardData () {
-      if(!window.confirm('삭제 하시겠습니까?')) return;
-      const bid = 'bbs';
-      const wr_id = this.GET_BOARD.wr_id;
-      this.DELETE_BOARD({bid, wr_id})
-        .then(() => {
-          this.$router.push(`/board/bbs`);
-        });
-    }
-  }
+    async deleteBoardData() {
+      if (!window.confirm('삭제 하시겠습니까?')) return
+      const bid = 'bbs'
+      const wr_id = this.GET_BOARD.wr_id
+      await this.DELETE_BOARD({ bid, wr_id })
+      await this.FETCH_BOARD(1)
+      this.$router.push(`/board/bbs`)
+    },
+  },
 }
 </script>

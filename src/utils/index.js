@@ -18,9 +18,23 @@ const validateEmail = (email) => {
   return re.test(String(email).toLowerCase());
 }
 
+const textareaEncode = (textareaContent = '') => {
+	return replaceAll(
+		textareaContent,
+		'\n',
+		'<br>',
+	)
+}
+
+const textareaDecode = (textareaContent = '') => {
+	return decodeURIComponent(textareaContent)
+}
+
 export {
 	formatPrice,
 	replaceAll,
 	addCommas,
-	validateEmail
+	validateEmail,
+	textareaEncode,
+	textareaDecode
 }
